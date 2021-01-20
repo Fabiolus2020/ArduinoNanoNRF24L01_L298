@@ -1,8 +1,4 @@
-/*       
- *        Arduino Car NRF24L01
- *        
- *        https://forbiddenbit.com/en/arduino-projects/joystick-control-arduino-car-and-nrf24l01/
-*/
+
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
@@ -16,7 +12,8 @@
 RF24 radio(8,9); // CE, CSN
 const byte address[6] = "00001";
 char receivedData[32] = "";
-int  xAxis, yAxis;
+int xAxis = 512;
+int yAxis = 512;
 int motorSpeedA = 0;
 int motorSpeedB = 0;
 int joystick[2]; 
@@ -54,7 +51,7 @@ void loop() {
 
   }
   
-  if (yAxis < 470) {
+  if (yAxis < 512) {
 
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
@@ -62,10 +59,10 @@ void loop() {
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
 
-    motorSpeedA = map(yAxis, 470, 0, 0, 255);
-    motorSpeedB = map(yAxis, 470, 0, 0, 255);
+    motorSpeedA = map(yAxis, 512, 0, 0, 255);
+    motorSpeedB = map(yAxis, 512, 0, 0, 255);
   }
-  else if (yAxis > 550) {
+  else if (yAxis > 512) {
 
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
@@ -73,8 +70,8 @@ void loop() {
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
     
-    motorSpeedA = map(yAxis, 550, 1023, 0, 255);
-    motorSpeedB = map(yAxis, 550, 1023, 0, 255);
+    motorSpeedA = map(yAxis, 512, 1023, 0, 255);
+    motorSpeedB = map(yAxis, 512, 1023, 0, 255);
   }
 
   else {
@@ -82,9 +79,9 @@ void loop() {
     motorSpeedB = 0;
   }
 
-  if (xAxis < 470) {
+  if (xAxis < 512) {
     
-    int xMapped = map(xAxis, 470, 0, 0, 255);
+    int xMapped = map(xAxis, 512, 0, 0, 255);
     
     motorSpeedA = motorSpeedA + xMapped;
     motorSpeedB = motorSpeedB + xMapped;
@@ -96,9 +93,9 @@ void loop() {
       motorSpeedB = 255;
     }
   }
-  if (xAxis > 550) {
+  if (xAxis > 512) {
     
-    int xMapped = map(xAxis, 550, 1023, 0, 255);
+    int xMapped = map(xAxis, 512, 1023, 0, 255);
     
     motorSpeedA = motorSpeedA + xMapped;
     motorSpeedB = motorSpeedB + xMapped;
