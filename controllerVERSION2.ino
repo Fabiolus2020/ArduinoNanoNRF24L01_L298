@@ -1,7 +1,6 @@
 /*   
  *    Arduino Car NRF24L01
  *    
- *    ForbiddenBit.com
 */
 
 #include <SPI.h>
