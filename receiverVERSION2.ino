@@ -1,4 +1,4 @@
-
+//This sketch leverage Pulse with Modulation using the L298N Dual H Bridge Motor Driver (PWM PIN ON ARDUINO ARE 3,5,6,9,10,11
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
