@@ -1,7 +1,5 @@
 /*       
  *        Arduino Car NRF24L01
- *        
- *        https://forbiddenbit.com/en/arduino-projects/joystick-control-arduino-car-and-nrf24l01/
 */
 #include <SPI.h>
 #include <nRF24L01.h>
