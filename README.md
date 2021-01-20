@@ -1,6 +1,6 @@
 # ArduinoNanoNRF24L01_L298
 
-Projct#8
+Projct#8 & 11
 
 Wireless communication using NRF24L01+ and the L298HdualBridge to control 2 dc motors One way communication
 
@@ -11,4 +11,8 @@ https://youtu.be/bihK9J9_0as
 2 x Arduino Nao
 1 x joystick
 2 x NRF24L01+
-2 x motorversion 1 & 2 use PWM pins on the L293 motor driver. You capture analog input and use the PWM pins on Arduino (3,5,6,9,10,11) to send data to ENA and ENB
+2 x motor 
+
+version 1 & 2 use PWM pins on ENA and ENB
+
+Version 3 use jumpers on ENA and ANB control is done using PWM signal using IN1,IN2,IN3,IN4 do control control direction
