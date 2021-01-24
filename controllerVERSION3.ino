@@ -1,31 +1,38 @@
-
+/*
+* Arduino Wireless Communication Tutorial
+*     Example 1 - Transmitter Code
+*                
+* by Dejan Nedelkovski, www.HowToMechatronics.com
+* 
+* Library: TMRh20/RF24, https://github.com/tmrh20/RF24/
 */
-//communication 1 way
-//firstly download library https://github.com/nRF24/RF24
-
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
 RF24 radio(8, 9); // CE, CSN
-const byte address[6] = "00001"; //Byte of array representing the address. This is the address where we will send the data. This should be same on the receiving side.
-
+const byte address[6] = "00001";
 
 char xyData[32] = "";
-int joystick[2];
-
-
-void setup()
-{
-  radio.begin();                  //Starting the Wireless communication
-  radio.openWritingPipe(address); //Setting the address where we will send the data
-  radio.setPALevel(RF24_PA_MIN);  //You can set it as minimum or maximum depending on the distance between the transmitter and receiver.
-  radio.stopListening();          //This sets the module as transmitter
+String xAxis, yAxis;
+void setup() {
+  Serial.begin(9600);
+  radio.begin();
+  radio.openWritingPipe(address);
+  radio.setPALevel(RF24_PA_MIN);
+  radio.stopListening();
 }
+void loop() {
+  
+  xAxis = analogRead(A0); // Read Joysticks X-axis
+  yAxis = analogRead(A1); // Read Joysticks Y-axis
+  // X value
+  xAxis.toCharArray(xyData, 5); // Put the String (X Value) into a character array
+  radio.write(&xyData, sizeof(xyData)); // Send the array data (X value) to the other NRF24L01 modile
+  // Y value
+  yAxis.toCharArray(xyData, 5);
+  radio.write(&xyData, sizeof(xyData));
+  delay(20);
 
-void loop()
-{
-
-  radio.write( joystick, sizeof(joystick) );
-
-  delay(100);
+  Serial.print("Y: ");
+  Serial.println(yAxis);
 }
