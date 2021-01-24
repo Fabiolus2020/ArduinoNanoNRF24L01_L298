@@ -19,6 +19,5 @@ https://youtu.be/1r-FbrC-4KA
 2 x NRF24L01+
 2 x motor 
 
-version 1 & 2 use PWM pins on ENA and ENB
+version 1  use PWM pins on ENA and ENB and verion 2 use jumpers on ENA and ENB
 
-Version 3 use jumpers on ENA and ANB control is done using PWM signal using IN1,IN2,IN3,IN4 do control control direction
