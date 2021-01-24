@@ -1,109 +1,117 @@
-//communication 1 way
-//firstly download library https://github.com/nRF24/RF24
+/*
+ * If you use the serial monitor for debugging remember to ster the baud rate to 115200.
+ * The modules are set to only one-way communication. That means that the controller can only transmit and the tank can only receive.
+ * If you wish to change this for two-way communication there is plenty of documentation to do so on the internet and in examples.
+ * 
+ * This program receives the X and Y values and processes it into movement.
+ */
+#include <SPI.h>  
+#include "RF24.h" 
 
-#include <SPI.h>
-#include <nRF24L01.h>
-#include <RF24.h>
-RF24 radio(8, 9); // CE, CSN
-const byte address[6] = "00001";
-
-char receivedData[32] = "";
-int xAxis = 512;
-int yAxis = 512;
-int joystick[2];
-
-byte addresses[][6] = {"0"};
-int EN1 = 5;
-int EN2 = 6;
-int EN3 = 3;
-int EN4 = 10;
-
-
-
-
-void setup()
+RF24 myRadio (7, 8); 
+struct package
 {
-  Serial.begin(9600);
-  radio.begin();
-  radio.openReadingPipe(0, address);   //Setting the address at which we will receive the data
-  radio.setPALevel(RF24_PA_MIN);       //You can set this as minimum or maximum depending on the distance between the transmitter and receiver.
-  radio.startListening();              //This sets the module as receiver
-  pinMode(EN1, OUTPUT);
-  pinMode(EN2, OUTPUT);
-  pinMode(EN3, OUTPUT);
-  pinMode(EN4, OUTPUT);
-  analogWrite(EN1, 0);
-  analogWrite(EN2, 0);
-  analogWrite(EN3, 0);
-  analogWrite(EN4, 0);
+  int X=512;
+  int Y=512;
+};
+
+byte addresses[][6] = {"0"}; 
+int OUT1 = 5;
+int OUT2 = 6;
+int OUT3 = 9;
+int OUT4 = 10;
+
+
+typedef struct package Package;
+Package data;
+
+void setup() 
+{
+  Serial.begin(115200);
+  delay(1000);
+
+  myRadio.begin(); 
+  myRadio.setChannel(115); 
+  myRadio.setPALevel(RF24_PA_MAX);
+  myRadio.setDataRate( RF24_250KBPS ) ; 
+  myRadio.openReadingPipe(1, addresses[0]);
+  myRadio.startListening();
+  pinMode(OUT1, OUTPUT);
+  pinMode(OUT2, OUTPUT);
+  pinMode(OUT3, OUTPUT);
+  pinMode(OUT4, OUTPUT);
+  analogWrite(OUT1, 0);
+  analogWrite(OUT2, 0);
+  analogWrite(OUT3, 0);
+  analogWrite(OUT4, 0);
 }
 
 
-void loop()
+void loop()  
 {
-  if ( radio.available())
+  if ( myRadio.available()) 
   {
-    while (radio.available())
+    while (myRadio.available())
     {
-      radio.read( joystick, sizeof(joystick) );
-
+      myRadio.read( &data, sizeof(data) );
     }
-
-    int yAxis = joystick[0];
-    int xAxis = joystick[1];
-    
-    int forward = map(xAxis, 524, 1024, 0, 255);
-    int backward = map(xAxis, 500, 0, 0, 255);
-    int right = map(yAxis, 524, 1024, 0, 255);
-    int left = map(yAxis, 500, 0, 0, 255);
-    
-    if (xAxis > 524 && yAxis < 524 && yAxis > 500) {
-      analogWrite(EN3, forward);
-      analogWrite(EN4, 0);
-      analogWrite(EN1, forward);
-      analogWrite(EN2, 0);
-    } else if (xAxis < 500 && yAxis < 524 && yAxis > 500) {
-      analogWrite(EN4, backward);
-      analogWrite(EN3, 0);
-      analogWrite(EN2, backward);
-      analogWrite(EN1, 0);
-    } else if (xAxis < 524 && xAxis > 500 && yAxis < 524 && yAxis > 500) {
-      analogWrite(EN4, 0);
-      analogWrite(EN3, 0);
-      analogWrite(EN2, 0);
-      analogWrite(EN1, 0);
-    } else if (xAxis < 524 && xAxis > 500 && yAxis > 524) {
-      analogWrite(EN4, 0);
-      analogWrite(EN3, left);
-      analogWrite(EN2, left);
-      analogWrite(EN1, 0);
-    } else if (xAxis < 524 && xAxis > 500 && yAxis < 500) {
-      analogWrite(EN4, right);
-      analogWrite(EN3, 0);
-      analogWrite(EN2, 0);
-      analogWrite(EN1, right);
-    } else if (xAxis > 524 && yAxis > 524) {
-      analogWrite(EN3, forward);
-      analogWrite(EN4, 0);
-      analogWrite(EN1, forward - right);
-      analogWrite(EN2, 0);
-    } else if (xAxis > 524 && yAxis < 500) {
-      analogWrite(EN3, forward - left);
-      analogWrite(EN4, 0);
-      analogWrite(EN1, forward);
-      analogWrite(EN2, 0);
-    } else if (xAxis < 500 && yAxis > 524) {
-      analogWrite(EN4, backward);
-      analogWrite(EN3, 0);
-      analogWrite(EN2, backward - right);
-      analogWrite(EN1, 0);
-    } else if (xAxis < 500 && yAxis < 500) {
-      analogWrite(EN4, backward - left);
-      analogWrite(EN3, 0);
-      analogWrite(EN2, backward);
-      analogWrite(EN1, 0);
+    Serial.print("X:");
+    Serial.print(data.X);
+    Serial.print("      Y");
+    Serial.println(data.Y);
+    int X = data.X;
+    int Y = data.Y;
+    int foward = map(X,524,1024,0,255);
+    int backward = map(X,500,0,0,255);
+    int right = map(Y,524,1024,0,255);
+    int left = map(Y,500,0,0,255);
+    if(X > 524 && Y < 524 && Y > 500){
+      analogWrite(OUT3, foward);
+      analogWrite(OUT4, 0);
+      analogWrite(OUT1, foward);
+      analogWrite(OUT2, 0);
+    }else if(X < 500 && Y < 524 && Y > 500){
+      analogWrite(OUT4, backward);
+      analogWrite(OUT3, 0);
+      analogWrite(OUT2, backward);
+      analogWrite(OUT1, 0);
+    }else if(X < 524 && X > 500 && Y < 524 && Y > 500){
+      analogWrite(OUT4, 0);
+      analogWrite(OUT3, 0);
+      analogWrite(OUT2, 0);
+      analogWrite(OUT1, 0);
+    }else if(X < 524 && X > 500 && Y > 524){
+      analogWrite(OUT4, 0);
+      analogWrite(OUT3, left);
+      analogWrite(OUT2, left);
+      analogWrite(OUT1, 0);
+    }else if(X < 524 && X > 500 && Y < 500){
+      analogWrite(OUT4, right);
+      analogWrite(OUT3, 0);
+      analogWrite(OUT2, 0);
+      analogWrite(OUT1, right);
+    }else if(X > 524 && Y > 524){
+      analogWrite(OUT3, foward);
+      analogWrite(OUT4, 0);
+      analogWrite(OUT1, foward-right);
+      analogWrite(OUT2, 0);
+    }else if(X > 524 && Y < 500){
+      analogWrite(OUT3, foward-left);
+      analogWrite(OUT4, 0);
+      analogWrite(OUT1, foward);
+      analogWrite(OUT2, 0);
+    }else if(X < 500 && Y > 524){
+      analogWrite(OUT4, backward);
+      analogWrite(OUT3, 0);
+      analogWrite(OUT2, backward-right);
+      analogWrite(OUT1, 0);
+    }else if(X < 500 && Y < 500){
+      analogWrite(OUT4, backward-left);
+      analogWrite(OUT3, 0);
+      analogWrite(OUT2, backward);
+      analogWrite(OUT1, 0);
     }
-
+    
   }
 
 }
