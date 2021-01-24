@@ -10,7 +10,7 @@ const byte address[6] = "00001";
 char receivedData[32] = "";
 int  xAxis, yAxis;
 
-#define enA 2   // Note: Pin 9 in previous video ( pin 10 is used for the SPI communication of the NRF24L01)
+#define enA 10   // Note: Pin 9 in previous video ( pin 10 is used for the SPI communication of the NRF24L01)
 #define in1 4
 #define in2 5
 #define enB 3   // Note:  Pin 10 in previous video
