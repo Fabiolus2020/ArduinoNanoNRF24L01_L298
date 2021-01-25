@@ -7,7 +7,7 @@ RF24 radio(8, 9); // CE, CSN
 const byte address[6] = "00001";
 
 char receivedData[32] = "";
-int  xAxis, yAxis, potValue;
+int  xAxis, yAxis;
 
 #define enA 10   // Note: Pin 9 in previous video ( pin 10 is used for the SPI communication of the NRF24L01)
 #define in1 4
@@ -43,17 +43,11 @@ void loop() {
     delay(10);
     radio.read(&receivedData, sizeof(receivedData));
     yAxis = atoi(&receivedData[0]);
-    delay(10);
-    radio.read(&receivedData, sizeof(receivedData));
-    potValue = atoi(&receivedData[0]);
 
-    delay(10);
     Serial.print("X : ");
     Serial.println(xAxis);
     Serial.print("Y : ");
     Serial.println(yAxis);
-    Serial.print("potValue : ");
-    Serial.println(potValue);
   }
 
 
