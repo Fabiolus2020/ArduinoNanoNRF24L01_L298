@@ -4,7 +4,7 @@ Projct#8 & 11
 
 Wireless communication using NRF24L01+ and the L298HdualBridge to control 2 dc motors One way communication.
 
-The best reults are if you use 9 volt or higher for the remote control
+The best reults are if you use 9 volt or higher for the remote control. I have set a limit for lowest speed which is 50, the value can be changed to go lower.
 
 
 Version 1
