@@ -1,4 +1,3 @@
-
 // Library: TMRh20/RF24, https://github.com/tmrh20/RF24/
 
 #include <SPI.h>
@@ -8,7 +7,7 @@ RF24 radio(8, 9); // CE, CSN
 const byte address[6] = "00001";
 
 char receivedData[32] = "";
-int  xAxis, yAxis;
+int  xAxis, yAxis, potValue;
 
 #define enA 10   // Note: Pin 9 in previous video ( pin 10 is used for the SPI communication of the NRF24L01)
 #define in1 4
@@ -38,18 +37,23 @@ void setup() {
 
 
 void loop() {
- if (radio.available()) {   // If the NRF240L01 module received data
+  if (radio.available()) {   // If the NRF240L01 module received data
     radio.read(&receivedData, sizeof(receivedData)); // Read the data and put it into character array
     xAxis = atoi(&receivedData[0]); // Convert the data from the character array (received X value) into integer
     delay(10);
     radio.read(&receivedData, sizeof(receivedData));
     yAxis = atoi(&receivedData[0]);
     delay(10);
-//Serial.print("X : ");
-//  Serial.println(xAxis);
- Serial.print("Y : ");
-  Serial.println(yAxis);
-    
+    radio.read(&receivedData, sizeof(receivedData));
+    potValue = atoi(&receivedData[0]);
+
+    delay(10);
+    Serial.print("X : ");
+    Serial.println(xAxis);
+    Serial.print("Y : ");
+    Serial.println(yAxis);
+    Serial.print("potValue : ");
+    Serial.println(potValue);
   }
 
 
@@ -67,13 +71,13 @@ void loop() {
   }
   else if (xAxis > 550) {
     // Set Motor A forward
-   digitalWrite(in1, LOW);
+    digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     // Set Motor B forward
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
     // Convert the increasing Y-axis readings for going forward from 550 to 1023 into 0 to 255 value for the PWM signal for increasing the motor speed
-   motorSpeedA = map(xAxis, 550, 1023, 0, 255);
+    motorSpeedA = map(xAxis, 550, 1023, 0, 255);
     motorSpeedB = map(xAxis, 550, 1023, 0, 255);
   }
   // If joystick stays in middle the motors are not moving
@@ -82,35 +86,35 @@ void loop() {
     motorSpeedB = 0;
   }
 
-  
+
   // Y-axis used for left and right control
   //this is left
   if (yAxis < 470) {
 
     // Set Motor A forward
-   digitalWrite(in1, LOW);
+    digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
     // Set Motor B backward
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
 
     // Convert the increasing Y-axis readings for going forward from 550 to 1023 into 0 to 255 value for the PWM signal for increasing the motor speed
-   motorSpeedA = map(yAxis, 470, 0, 0, 255);
+    motorSpeedA = map(yAxis, 470, 0, 0, 255);
     motorSpeedB = map(yAxis, 470, 0, 0, 255);
   }
 
-  
+
   if (yAxis > 550) {
 
     // Set Motor A forward
-   digitalWrite(in1, HIGH);
+    digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
     // Set Motor B backward
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
 
     // Convert the increasing Y-axis readings for going forward from 550 to 1023 into 0 to 255 value for the PWM signal for increasing the motor speed
-   motorSpeedA = map(yAxis, 550, 1023, 0, 255);
+    motorSpeedA = map(yAxis, 550, 1023, 0, 255);
     motorSpeedB = map(yAxis, 550, 1023, 0, 255);
   }
   // Prevent buzzing at low speeds (Adjust according to your motors. My motors couldn't start moving if PWM value was below value of 70)
