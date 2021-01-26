@@ -1,19 +1,18 @@
-/*
-  nRF24L01+ Joystick Transmitter
-  nrf24l01-joy-xmit-car.ino
-  nRF24L01+ Transmitter with Joystick for Robot Car
-  Use with Joystick Receiver for Robot Car
-  DroneBot Workshop 2018
-  https://dronebotworkshop.com
-*/
-
-// Include RadioHead ReliableDatagram & NRF24 Libraries
-#include <RHReliableDatagram.h>
-#include <RH_NRF24.h>
-
-// Include dependant SPI Library
 #include <SPI.h>
+#include "RF24.h"
 
+RF24 myRadio(8, 9); // CE, CSN
+byte addresses[][6] = {"0"};
+
+struct package
+{
+  int motorspeed1;
+  int motorspeed2;
+  int motordirection;
+};
+
+typedef struct package Package;
+Package data;
 // Define Joystick Connections
 #define joyX A0
 #define joyY A1
@@ -21,42 +20,34 @@
 // Define Joystick Values - Start at 512 (middle position)
 int joyposX = 512;
 int joyposY = 512;
-
-// Define addresses for radio channels
-#define CLIENT_ADDRESS 1
-#define SERVER_ADDRESS 2
-
-// Create an instance of the radio driver
-RH_NRF24 RadioDriver;
-
-// Sets the radio driver to NRF24 and the client address to 1
-RHReliableDatagram RadioManager(RadioDriver, CLIENT_ADDRESS);
-
-// Declare unsigned 8-bit motorcontrol array
-// 2 Bytes for motor speeds plus 1 byte for direction control
-uint8_t motorcontrol[3];
-
-// Define the Message Buffer
-uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
+int motordirection = 0;
+int motorspeed1;
+int motorspeed2;
 
 void setup()
 {
-  // Setup Serial Monitor
   Serial.begin(9600);
-
-  // Initialize RadioManager with defaults - 2.402 GHz (channel 2), 2Mbps, 0dBm
-  if (!RadioManager.init())
-   // Serial.println("init failed");
+  delay(100);
+  myRadio.begin();
+  myRadio.setChannel(115);
+  myRadio.setPALevel(RF24_PA_MIN);
+  myRadio.setDataRate( RF24_250KBPS ) ;
+  myRadio.openWritingPipe( addresses[0]);
+  delay(100);
 
   // Set initial motor direction as forward
-  motorcontrol[2] = 0;
+  int motordirection = 0;
+  int motorspeed1 = 0;
+  int motorspeed2 = 0;
 
 }
 
 void loop()
 {
+
+  myRadio.write(&data, sizeof(data));
   // Print to Serial Monitor
- // Serial.println("Reading motorcontrol values ");
+  // Serial.println("Reading motorcontrol values ");
 
   // Read the Joystick X and Y positions
   joyposX = analogRead(joyX);
@@ -70,31 +61,31 @@ void loop()
   {
     // This is Forward
     // Set Motors forward
-    motorcontrol[2] = 0;
+    data.motordirection = 0;
 
     //Determine Motor Speeds
     // my joystick is positioned upside down so we need to reverse readings
-    motorcontrol[0] = map(joyposX, 460, 0, 0, 255);
-    motorcontrol[1] = map(joyposX, 460, 0, 0, 255);
+    data.motorspeed1 = map(joyposX, 460, 0, 0, 255);
+    data.motorspeed2 = map(joyposX, 460, 0, 0, 255);
 
   }
   else if (joyposX > 600)
   {
     // This is backward
     // Set Motors backward
-    motorcontrol[2] = 1;
+    data.motordirection = 1;
 
     //Determine Motor Speeds
-    motorcontrol[0] = map(joyposX, 600, 1023, 0, 255);
-    motorcontrol[1] = map(joyposX, 600, 1023, 0, 255);
+    data.motorspeed1 = map(joyposX, 600, 1023, 0, 255);
+    data.motorspeed2 = map(joyposX, 600, 1023, 0, 255);
 
   }
   else
   {
     // This is Stopped
-    motorcontrol[0] = 0;
-    motorcontrol[1] = 0;
-    motorcontrol[2] = 0;
+    data.motordirection = 0;
+    data.motorspeed1 = 0;
+    data.motorspeed2 = 0;
 
   }
 
@@ -107,75 +98,56 @@ void loop()
 
     // This is left
     // Set Motors backward and forward
-    motorcontrol[2] = 3;
+    data.motordirection = 3;
     // Move Left
     // As we are going left we need to reverse readings
     // Map the number to a value of 255 maximum
-    motorcontrol[0] = map(joyposY, 600, 1023, 0, 255);
-    motorcontrol[1] = map(joyposY, 600, 1023, 0, 255);
+    data.motorspeed1 = map(joyposY, 600, 1023, 0, 255);
+    data.motorspeed2 = map(joyposY, 600, 1023, 0, 255);
     //  motorcontrol[0] = motorcontrol[0] - joyposHorz;
     // motorcontrol[1] = motorcontrol[1] + joyposHorz;
 
     // Don't exceed range of 0-255 for motor speeds
-  //  if (motorcontrol[0] < 0)motorcontrol[0] = 0;
- //   if (motorcontrol[1] > 255)motorcontrol[1] = 255;
+    //  if (motorcontrol[0] < 0)motorcontrol[0] = 0;
+    //   if (motorcontrol[1] > 255)motorcontrol[1] = 255;
 
   }
   else if (joyposY < 460)
   {
-    motorcontrol[2] = 4;
+    data.motordirection = 4;
     // Move Right
- // Set Motors forward and backward
+    // Set Motors forward and backward
     // Map the number to a value of 255 maximum
-    motorcontrol[0] = map(joyposY, 460, 0, 0, 255);
-    motorcontrol[1] = map(joyposY, 460, 0, 0, 255);
+    data.motorspeed1 = map(joyposY, 460, 0, 0, 255);
+    data.motorspeed2 = map(joyposY, 460, 0, 0, 255);
 
 
     //motorcontrol[0] = motorcontrol[0] + joyposHorz;
     //motorcontrol[1] = motorcontrol[1] - joyposHorz;
 
     // Don't exceed range of 0-255 for motor speeds
-  //  if (motorcontrol[0] > 255)motorcontrol[0] = 255;
-  //  if (motorcontrol[1] < 0)motorcontrol[1] = 0;
+    //  if (motorcontrol[0] > 255)motorcontrol[0] = 255;
+    //  if (motorcontrol[1] < 0)motorcontrol[1] = 0;
 
   }
 
   // Adjust to prevent "buzzing" at very low speed
-  if (motorcontrol[0] < 8)motorcontrol[0] = 0;
-  if (motorcontrol[1] < 8)motorcontrol[1] = 0;
+  if (data.motorspeed1 < 8)data.motorspeed1 = 0;
+  if (data.motorspeed2 < 8)data.motorspeed2 = 0;
 
   //Display the Motor Control values in the serial monitor.
-  //Serial.print("Motor A: ");
- /// Serial.print(motorcontrol[0]);
- // Serial.print(" - Motor B: ");
-  //Serial.print(motorcontrol[1]);
- // Serial.print(" - Direction: ");
- // Serial.println(motorcontrol[2]);
- // Serial.print(" Xjoystick: ");
- // Serial.println(joyposX);
- // Serial.print(" Yjoystick: ");
+  Serial.print("motorspeed1: ");
+   Serial.println(data.motorspeed1);
+   Serial.print(" motorspeed2: ");
+  Serial.println(data.motorspeed2);
+   Serial.print(" - Direction: ");
+   Serial.println(data.motordirection);
+  // Serial.print(" Xjoystick: ");
+  // Serial.println(joyposX);
+  // Serial.print(" Yjoystick: ");
   //Serial.println(joyposY);
 
-  //Send a message containing Motor Control data to manager_server
-  if (RadioManager.sendtoWait(motorcontrol, sizeof(motorcontrol), SERVER_ADDRESS))
-  {
-    // Now wait for a reply from the server
-    uint8_t len = sizeof(buf);
-    uint8_t from;
-    //if (RadioManager.recvfromAckTimeout(buf, &len, 2000, &from))
-    //{
-     // Serial.print("got reply from : 0x");
-    //  Serial.print(from, HEX);
-    //  Serial.print(": ");
-    //  Serial.println((char*)buf);
-    }
-   // else
-   // {
-    //  Serial.println("No reply, is nrf24_reliable_datagram_server running?");
-   // }
-  
- // else
-   // Serial.println("sendtoWait failed");
+
 
   delay(100);  // Wait a bit before next transmission
 }
