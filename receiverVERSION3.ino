@@ -10,7 +10,10 @@ struct package
   int motordirection;
 };
 
-byte addresses[][6] = {"0"};
+//address through which two modules communicate.
+const byte address[6] = "00001";
+
+//byte addresses[][6] = {"0"};
 
 // Motor A Connections
 int enA = 10;
