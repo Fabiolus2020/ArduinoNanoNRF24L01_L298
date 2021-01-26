@@ -8,7 +8,7 @@
 #include <SPI.h>  
 #include "RF24.h"
 
-RF24 radio(8, 9); // CE, CSN
+RF24 Myradio(8, 9); // CE, CSN
 byte addresses[][6] = {"0"};
 
 struct package
