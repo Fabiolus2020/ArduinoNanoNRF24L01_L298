@@ -132,8 +132,8 @@ void loop()
   }
 
   // Adjust to prevent "buzzing" at very low speed
-  if (data.motorspeed1 < 8)data.motorspeed1 = 0;
-  if (data.motorspeed2 < 8)data.motorspeed2 = 0;
+  if (data.motorspeed1 < 70)data.motorspeed1 = 0;
+  if (data.motorspeed2 < 70)data.motorspeed2 = 0;
 
   //Display the Motor Control values in the serial monitor.
  // Serial.print("motorspeed1: ");
