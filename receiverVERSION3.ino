@@ -55,12 +55,12 @@ void setup()
       }
 
       //Serial Print the values
-      Serial.print(": motorspeed1 :");
-      Serial.println(data.motorspeed1);
-      Serial.print(" motorspeed2 :");
-      Serial.println(data.motorspeed2);
-      Serial.print(" direction");
-      Serial.println(data.motordirection);
+     // Serial.print(": motorspeed1 :");
+    //  Serial.println(data.motorspeed1);
+    //  Serial.print(" motorspeed2 :");
+    //  Serial.println(data.motorspeed2);
+    //  Serial.print(" direction");
+     // Serial.println(data.motordirection);
       //delay (2000);
       // Set Motor Direction
       if (data.motordirection == 1)
