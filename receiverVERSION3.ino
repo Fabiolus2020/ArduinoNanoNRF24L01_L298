@@ -36,7 +36,10 @@ void setup()
   myRadio.setChannel(115);
   myRadio.setPALevel(RF24_PA_MAX);
   myRadio.setDataRate( RF24_250KBPS ) ;
-  myRadio.openReadingPipe(1, addresses[0]);
+  //myRadio.openReadingPipe(1, addresses[0]);
+
+  //set the address
+  myRadio.openReadingPipe(0, address);
   myRadio.startListening();
   // Set all the motor control pins to outputs
   pinMode(enA, OUTPUT);
