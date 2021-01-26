@@ -30,7 +30,7 @@ Package data;
 
 void setup()
 {
-  // Setup Serial Monitor
+  while (!Serial);
   Serial.begin(9600);
   myRadio.begin();
   myRadio.setChannel(115);
@@ -54,11 +54,11 @@ void setup()
   void loop()
   {
     if ( myRadio.available())
-    {
-      while (myRadio.available())
-      {
+   // {
+      //while (myRadio.available())
+      //{
         myRadio.read( &data, sizeof(data) );
-      }
+      //}
 
       //Serial Print the values
      // Serial.print(": motorspeed1 :");
