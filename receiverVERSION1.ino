@@ -63,10 +63,10 @@ void setup() {
 void loop() {
   if ( myRadio.available())
   {
-    while (myRadio.available())
-    {
+    //while (myRadio.available())
+    //{
       myRadio.read( &data, sizeof(data) );
-    }
+   // }
    // Serial.print("X : ");
    // Serial.println(data.joyposX);
    // Serial.print("Y : ");
