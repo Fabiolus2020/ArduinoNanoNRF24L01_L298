@@ -1,12 +1,7 @@
-/*
- * If you use the serial monitor for debugging remember to ster the baud rate to 115200.
- * The modules are set to only one-way communication. That means that the controller can only transmit and the tank can only receive.
- * If you wish to change this for two-way communication there is plenty of documentation to do so on the internet and in examples.
- * 
- * This program receives the X and Y values and processes it into movement.
- */
-#include <SPI.h>  
-#include "RF24.h" 
+//Include Libraries
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 
 RF24 myRadio(8, 9); // CE, CSN
 struct package
