@@ -8,7 +8,7 @@ RF24 myRadio(8, 9); // CE, CSN
 //address through which two modules communicate.
 const byte address[6] = "00001";
 
-//byte addresses[][6] = {"0"};
+
 
 
 
@@ -33,7 +33,7 @@ void setup() {
   Serial.begin(9600);
   myRadio.begin();
   myRadio.setChannel(115);
- // myRadio.openWritingPipe( addresses[0]);
+
  //set the address
  myRadio.openWritingPipe(address);
  myRadio.setPALevel(RF24_PA_MAX);
@@ -46,8 +46,6 @@ myRadio.stopListening();
 }
 void loop() {
   myRadio.write(&data, sizeof(data));
- // data.xAxis = analogRead(A0); // Read Joysticks X-axis
-  //data.yAxis = analogRead(A1); // Read Joysticks Y-axis
   
   data.joyposX = analogRead(joyX);
   data.joyposY = analogRead(joyY);
