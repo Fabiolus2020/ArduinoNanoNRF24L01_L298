@@ -61,10 +61,10 @@ void loop()
 {
   if ( myRadio.available()) 
   {
-    while (myRadio.available())
-    {
+    //while (myRadio.available())
+    //{
       myRadio.read( &data, sizeof(data) );
-    }
+  //  }
     Serial.print("X:");
     Serial.print(data.X);
     Serial.print("      Y");
