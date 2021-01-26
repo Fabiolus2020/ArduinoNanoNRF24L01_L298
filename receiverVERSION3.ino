@@ -1,50 +1,40 @@
-/*
-  nRF24L01+ Joystick Receiver for Robot Car
-  nrf24l01-joy-rcv-car.ino
-  nRF24L01+ Receiver and L298N driver for Robot Car
-  Use with Joystick Transmitter for Robot Car
-  DroneBot Workshop 2018
-  https://dronebotworkshop.com
-*/
 
-// Include RadioHead ReliableDatagram & NRF24 Libraries
-#include <RHReliableDatagram.h>
-#include <RH_NRF24.h>
-
-// Include dependant SPI Library
 #include <SPI.h>
+#include "RF24.h"
 
-// Define addresses for radio channels
-#define CLIENT_ADDRESS 1
-#define SERVER_ADDRESS 2
+RF24 myRadio(8, 9); // CE, CSN
+struct package
+{
+  int motorspeed1;
+  int motorspeed2;
+  int motordirection;
+};
+
+byte addresses[][6] = {"0"};
 
 // Motor A Connections
-int enA = 9;
-int in1 = 2;
-int in2 = 4;
+int enA = 10;
+int in1 = 4;
+int in2 = 5;
 
 // Motor B Connections
-int enB = 5;
-int in3 = 7;
-int in4 = 6;
+int enB = 3;
+int in3 = 6;
+int in4 = 7;
 
-// Create an instance of the radio driver
-RH_NRF24 RadioDriver;
-
-// Sets the radio driver to NRF24 and the server address to 2
-RHReliableDatagram RadioManager(RadioDriver, SERVER_ADDRESS);
-
-// Define a message to return if values received
-uint8_t ReturnMessage[] = "JoyStick Data Received";
-
-// Define the Message Buffer
-uint8_t buf[RH_NRF24_MAX_MESSAGE_LEN];
+typedef struct package Package;
+Package data;
 
 void setup()
 {
   // Setup Serial Monitor
   Serial.begin(9600);
-
+  myRadio.begin();
+  myRadio.setChannel(115);
+  myRadio.setPALevel(RF24_PA_MAX);
+  myRadio.setDataRate( RF24_250KBPS ) ;
+  myRadio.openReadingPipe(1, addresses[0]);
+  myRadio.startListening();
   // Set all the motor control pins to outputs
   pinMode(enA, OUTPUT);
   pinMode(enB, OUTPUT);
@@ -53,34 +43,27 @@ void setup()
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
 
-  // Initialize RadioManager with defaults - 2.402 GHz (channel 2), 2Mbps, 0dBm
- // if (!RadioManager.init())
- //   Serial.println("init failed");
 }
 
-void loop()
-{
-  if (RadioManager.available())
+  void loop()
   {
-    // Wait for a message addressed to us from the client
-    uint8_t len = sizeof(buf);
-    uint8_t from;
-    if (RadioManager.recvfromAck(buf, &len, &from))
-
+    if ( myRadio.available())
     {
+      while (myRadio.available())
+      {
+        myRadio.read( &data, sizeof(data) );
+      }
 
-      //Serial Print the values of joystick
-    //  Serial.print("got request from : 0x");
-     // Serial.print(from, HEX);
-    //  Serial.print(": MotorA = ");
-    //  Serial.print(buf[0]);
-    //  Serial.print(" MotorB = ");
-    //  Serial.print(buf[1]);
-    //  Serial.print(" Dir = ");
-     // Serial.println(buf[2]);
-
+      //Serial Print the values
+      Serial.print(": motorspeed1 :");
+      Serial.println(data.motorspeed1);
+      Serial.print(" motorspeed2 :");
+      Serial.println(data.motorspeed2);
+      Serial.print(" direction");
+      Serial.println(data.motordirection);
+      //delay (2000);
       // Set Motor Direction
-      if (buf[2] == 1)
+      if (data.motordirection == 1)
       {
         // Motors are backwards
         digitalWrite(in1, LOW);
@@ -89,7 +72,7 @@ void loop()
         digitalWrite(in4, HIGH);
       }
 
-      if (buf[2] == 0)
+      if (data.motordirection == 0)
       {
         // Motors are forwards
         digitalWrite(in1, HIGH);
@@ -98,7 +81,7 @@ void loop()
         digitalWrite(in4, LOW);
       }
 
-      if (buf[2] == 3)
+      if (data.motordirection == 3)
       {
         // Motors are forwards
         digitalWrite(in1, HIGH);
@@ -107,7 +90,7 @@ void loop()
         digitalWrite(in4, HIGH);
       }
 
-      if (buf[2] == 4)
+      if (data.motordirection == 4)
       {
         // Motors are forwards
         digitalWrite(in1, HIGH);
@@ -116,12 +99,8 @@ void loop()
         digitalWrite(in4, HIGH);
       }
       // Drive Motors
-      analogWrite(enA, buf[1]);
-      analogWrite(enB, buf[0]);
+      analogWrite(enA, data.motorspeed1);
+      analogWrite(enB, data.motorspeed2);
 
-      // Send a reply back to the originator client, check for error
-      if (!RadioManager.sendtoWait(ReturnMessage, sizeof(ReturnMessage), from))
-        Serial.println("sendtoWait failed");
     }
   }
-}
