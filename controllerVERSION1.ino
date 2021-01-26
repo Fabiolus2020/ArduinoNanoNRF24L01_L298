@@ -1,4 +1,3 @@
-
 // Library: TMRh20/RF24, https://github.com/tmrh20/RF24/
 
 #include <SPI.h>
@@ -9,20 +8,20 @@ byte addresses[][6] = {"0"};
 
 struct package
 {
-  int xAxis;
-  int yAxis;
+  int joyposX;
+  int joyposY;
 };
 
 typedef struct package Package;
 Package data;
 
 // Define Joystick Connections
-//#define joyX A0
-//#define joyY A1
+#define joyX A0
+#define joyY A1
 
 // Define Joystick Values - Start at 512 (middle position)
-//int joyposX = 512;
-//int joyposY = 512;
+int joyposX = 512;
+int joyposY = 512;
 
 void setup() {
   Serial.begin(9600);
@@ -35,16 +34,16 @@ void setup() {
 }
 void loop() {
   myRadio.write(&data, sizeof(data));
-  data.xAxis = analogRead(A0); // Read Joysticks X-axis
-  data.yAxis = analogRead(A1); // Read Joysticks Y-axis
+ // data.xAxis = analogRead(A0); // Read Joysticks X-axis
+  //data.yAxis = analogRead(A1); // Read Joysticks Y-axis
   
-  //joyposX = analogRead(joyX);
-  //joyposY = analogRead(joyY);
+  data.joyposX = analogRead(joyX);
+  data.joyposY = analogRead(joyY);
 
 //Serial.print("xAxis :");
-//Serial.println(data.xAxis);
+//Serial.println(data.joyposX);
 //Serial.print("yAxis :");
-//Serial.println(data.yAxis);
+//Serial.println(data.joyposY);
   delay(20);
 
 }
