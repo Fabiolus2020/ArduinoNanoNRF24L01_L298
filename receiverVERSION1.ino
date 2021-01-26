@@ -44,7 +44,7 @@ void setup() {
   //myRadio.openReadingPipe(1, addresses[0]);
 
   //set the address
-  radio.openReadingPipe(0, address);
+  myRadio.openReadingPipe(0, address);
 
   myRadio.startListening();
   pinMode(enA, OUTPUT);
