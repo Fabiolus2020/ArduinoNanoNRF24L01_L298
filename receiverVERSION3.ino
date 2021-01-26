@@ -1,4 +1,3 @@
-
 //Include Libraries
 #include <SPI.h>
 #include <nRF24L01.h>
@@ -56,7 +55,7 @@ void setup()
   void loop()
   {
     if ( myRadio.available())
-   // {
+    {
       //while (myRadio.available())
       //{
         myRadio.read( &data, sizeof(data) );
@@ -102,7 +101,7 @@ void setup()
       {
         // Motors are forwards
         digitalWrite(in1, LOW);
-        digitalWrite(in2, HIG);
+        digitalWrite(in2, HIGH);
         digitalWrite(in3, HIGH);
         digitalWrite(in4, LOW);
       }
@@ -111,4 +110,5 @@ void setup()
       analogWrite(enB, data.motorspeed2);
 
     }
+    delay(30);
   }
