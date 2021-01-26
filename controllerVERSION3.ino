@@ -2,7 +2,11 @@
 #include "RF24.h"
 
 RF24 myRadio(8, 9); // CE, CSN
-byte addresses[][6] = {"0"};
+
+//address through which two modules communicate.
+const byte address[6] = "00001";
+
+//byte addresses[][6] = {"0"};
 
 struct package
 {
