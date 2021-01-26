@@ -32,6 +32,9 @@ int motorspeed2;
 
 void setup()
 {
+
+ while (!Serial);
+
   Serial.begin(9600);
   delay(100);
   myRadio.begin();
