@@ -8,7 +8,7 @@
 #include <SPI.h>  
 #include "RF24.h" 
 
-RF24 radio(8, 9); // CE, CSN
+RF24 myRadio(8, 9); // CE, CSN
 struct package
 {
   int X=512;
