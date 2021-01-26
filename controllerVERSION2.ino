@@ -30,7 +30,10 @@ void setup()
 
 // myRadio.openWritingPipe( addresses[0]);
  //set the address
-myRadio.openWritingPipe(address);
+  myRadio.openWritingPipe(address);
+
+//Set module as transmitter
+  myRadio.stopListening();
 
 }
 
