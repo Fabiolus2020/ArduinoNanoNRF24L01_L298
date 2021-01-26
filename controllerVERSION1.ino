@@ -35,9 +35,13 @@ void setup() {
   myRadio.setChannel(115);
  // myRadio.openWritingPipe( addresses[0]);
  //set the address
-myRadio.openWritingPipe(address);
+ myRadio.openWritingPipe(address);
  myRadio.setPALevel(RF24_PA_MAX);
-  myRadio.setDataRate( RF24_250KBPS );
+ myRadio.setDataRate( RF24_250KBPS );
+
+//Set module as transmitter
+myRadio.stopListening();
+
   delay(100);
 }
 void loop() {
