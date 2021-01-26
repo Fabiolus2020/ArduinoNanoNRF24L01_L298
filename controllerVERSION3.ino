@@ -136,12 +136,12 @@ void loop()
   if (data.motorspeed2 < 8)data.motorspeed2 = 0;
 
   //Display the Motor Control values in the serial monitor.
-  Serial.print("motorspeed1: ");
-   Serial.println(data.motorspeed1);
-   Serial.print(" motorspeed2: ");
-  Serial.println(data.motorspeed2);
-   Serial.print(" - Direction: ");
-   Serial.println(data.motordirection);
+ // Serial.print("motorspeed1: ");
+  // Serial.println(data.motorspeed1);
+ //  Serial.print(" motorspeed2: ");
+ // Serial.println(data.motorspeed2);
+ //  Serial.print(" - Direction: ");
+ //  Serial.println(data.motordirection);
   // Serial.print(" Xjoystick: ");
   // Serial.println(joyposX);
   // Serial.print(" Yjoystick: ");
