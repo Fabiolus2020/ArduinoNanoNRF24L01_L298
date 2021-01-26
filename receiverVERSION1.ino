@@ -8,11 +8,6 @@ RF24 myRadio(8, 9); // CE, CSN
 //address through which two modules communicate.
 const byte address[6] = "00001";
 
-//byte addresses[][6] = {"0"};
-
-//char receivedData[32] = "";
-//int  xAxis, yAxis;
-
 
 struct package
 {
@@ -44,7 +39,6 @@ void setup() {
   myRadio.setChannel(115);
   myRadio.setPALevel(RF24_PA_MAX);
   myRadio.setDataRate( RF24_250KBPS ) ;
-  //myRadio.openReadingPipe(1, addresses[0]);
 
   //set the address
   myRadio.openReadingPipe(0, address);
@@ -63,10 +57,9 @@ void setup() {
 void loop() {
   if ( myRadio.available())
   {
-    //while (myRadio.available())
-    //{
+
       myRadio.read( &data, sizeof(data) );
-   // }
+   
    // Serial.print("X : ");
    // Serial.println(data.joyposX);
    // Serial.print("Y : ");
