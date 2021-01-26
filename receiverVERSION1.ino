@@ -36,6 +36,9 @@ int motorSpeedA = 0;
 int motorSpeedB = 0;
 
 void setup() {
+
+ while (!Serial);
+
   Serial.begin(9600);
   myRadio.begin();
   myRadio.setChannel(115);
