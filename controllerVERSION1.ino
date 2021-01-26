@@ -16,6 +16,13 @@ struct package
 typedef struct package Package;
 Package data;
 
+// Define Joystick Connections
+//#define joyX A0
+//#define joyY A1
+
+// Define Joystick Values - Start at 512 (middle position)
+//int joyposX = 512;
+//int joyposY = 512;
 
 void setup() {
   Serial.begin(9600);
@@ -30,6 +37,9 @@ void loop() {
   myRadio.write(&data, sizeof(data));
   data.xAxis = analogRead(A0); // Read Joysticks X-axis
   data.yAxis = analogRead(A1); // Read Joysticks Y-axis
+  
+  //joyposX = analogRead(joyX);
+  //joyposY = analogRead(joyY);
 
 //Serial.print("xAxis :");
 //Serial.println(data.xAxis);
