@@ -93,10 +93,10 @@ void setup()
       if (data.motordirection == 4)
       {
         // Motors are forwards
-        digitalWrite(in1, HIGH);
-        digitalWrite(in2, LOW);
-        digitalWrite(in3, LOW);
-        digitalWrite(in4, HIGH);
+        digitalWrite(in1, LOW);
+        digitalWrite(in2, HIG);
+        digitalWrite(in3, HIGH);
+        digitalWrite(in4, LOW);
       }
       // Drive Motors
       analogWrite(enA, data.motorspeed1);
