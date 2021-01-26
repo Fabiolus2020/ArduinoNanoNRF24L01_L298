@@ -41,6 +41,10 @@ void setup()
  //set the address
   myRadio.openWritingPipe(address);
 
+//Set module as transmitter
+  myRadio.stopListening();
+
+
   delay(100);
 
   // Set initial motor direction as forward
