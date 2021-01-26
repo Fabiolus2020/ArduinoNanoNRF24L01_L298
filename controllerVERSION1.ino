@@ -24,6 +24,7 @@ void setup() {
   myRadio.openWritingPipe( addresses[0]);
   myRadio.setPALevel(RF24_PA_MAX);
   myRadio.setDataRate( RF24_250KBPS );
+  delay(100);
 }
 void loop() {
   myRadio.write(&data, sizeof(data));
