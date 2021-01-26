@@ -4,33 +4,36 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-RF24 radio(8, 9); // CE, CSN
-const byte address[6] = "00001";
+RF24 myRadio(8, 9); // CE, CSN
+byte addresses[][6] = {"0"};
 
-char xyData[32] = "";
-String xAxis, yAxis;
+struct package
+{
+  int xAxis;
+  int yAxis;
+};
+
+typedef struct package Package;
+Package data;
+
+
 void setup() {
   Serial.begin(9600);
-  radio.begin();
- // myRadio.setChannel(115);
-  radio.openWritingPipe(address);
-  //myRadio.openWritingPipe( addresses[0]);
-  radio.setPALevel(RF24_PA_MIN);
- // myRadio.setDataRate( RF24_250KBPS );
-  radio.stopListening();
+  myRadio.begin();
+  myRadio.setChannel(115);
+  myRadio.openWritingPipe( addresses[0]);
+  myRadio.setPALevel(RF24_PA_MAX);
+  myRadio.setDataRate( RF24_250KBPS );
 }
 void loop() {
-  
-  xAxis = analogRead(A0); // Read Joysticks X-axis
-  yAxis = analogRead(A1); // Read Joysticks Y-axis
-  // X value
-  xAxis.toCharArray(xyData, 5); // Put the String (X Value) into a character array
-  radio.write(&xyData, sizeof(xyData)); // Send the array data (X value) to the other NRF24L01 modile
-  // Y value
-  yAxis.toCharArray(xyData, 5);
-  radio.write(&xyData, sizeof(xyData));
+  myRadio.write(&data, sizeof(data));
+  data.xAxis = analogRead(A0); // Read Joysticks X-axis
+  data.yAxis = analogRead(A1); // Read Joysticks Y-axis
+
+//Serial.print("xAxis :");
+//Serial.println(data.xAxis);
+//Serial.print("yAxis :");
+//Serial.println(data.yAxis);
   delay(20);
 
-  Serial.print("Y: ");
-  Serial.println(yAxis);
 }
