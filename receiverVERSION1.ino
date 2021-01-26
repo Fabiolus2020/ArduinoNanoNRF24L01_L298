@@ -14,8 +14,8 @@ byte addresses[][6] = {"0"};
 
 struct package
 {
-  int xAxis;
-  int yAxis;
+  int joyposX;
+  int joyposY;
 };
 
 typedef struct package Package;
@@ -59,14 +59,14 @@ void loop() {
       myRadio.read( &data, sizeof(data) );
     }
    // Serial.print("X : ");
-   // Serial.println(data.xAxis);
+   // Serial.println(data.joyposX);
    // Serial.print("Y : ");
-  //  Serial.println(data.yAxis);
+  //  Serial.println(data.joyposY);
 
 
 
     // X-axis used for forward and backward control
-    if (data.xAxis < 470) {
+    if (data.joyposX < 470) {
       // Set Motor A backward
       digitalWrite(in1, HIGH);
       digitalWrite(in2, LOW);
@@ -74,10 +74,10 @@ void loop() {
       digitalWrite(in3, HIGH);
       digitalWrite(in4, LOW);
       // Convert the declining Y-axis readings for going backward from 470 to 0 into 0 to 255 value for the PWM signal for increasing the motor speed
-      motorSpeedA = map(data.xAxis, 470, 0, 0, 255);
-      motorSpeedB = map(data.xAxis, 470, 0, 0, 255);
+      motorSpeedA = map(data.joyposX, 470, 0, 0, 255);
+      motorSpeedB = map(data.joyposX, 470, 0, 0, 255);
     }
-    else if (data.xAxis > 550) {
+    else if (data.joyposX > 550) {
       // Set Motor A forward
       digitalWrite(in1, LOW);
       digitalWrite(in2, HIGH);
@@ -85,8 +85,8 @@ void loop() {
       digitalWrite(in3, LOW);
       digitalWrite(in4, HIGH);
       // Convert the increasing Y-axis readings for going forward from 550 to 1023 into 0 to 255 value for the PWM signal for increasing the motor speed
-      motorSpeedA = map(data.xAxis, 550, 1023, 0, 255);
-      motorSpeedB = map(data.xAxis, 550, 1023, 0, 255);
+      motorSpeedA = map(data.joyposX, 550, 1023, 0, 255);
+      motorSpeedB = map(data.joyposX, 550, 1023, 0, 255);
     }
     // If joystick stays in middle the motors are not moving
     else {
@@ -97,7 +97,7 @@ void loop() {
 
     // Y-axis used for left and right control
     //this is left
-    if (data.yAxis < 470) {
+    if (data.joyposY < 470) {
 
       // Set Motor A forward
       digitalWrite(in1, LOW);
@@ -107,12 +107,12 @@ void loop() {
       digitalWrite(in4, LOW);
 
       // Convert the increasing Y-axis readings for going forward from 550 to 1023 into 0 to 255 value for the PWM signal for increasing the motor speed
-      motorSpeedA = map(data.yAxis, 470, 0, 0, 255);
-      motorSpeedB = map(data.yAxis, 470, 0, 0, 255);
+      motorSpeedA = map(data.joyposY, 470, 0, 0, 255);
+      motorSpeedB = map(data.joyposY, 470, 0, 0, 255);
     }
 
 
-    if (data.yAxis > 550) {
+    if (data.joyposY > 550) {
 
       // Set Motor A forward
       digitalWrite(in1, HIGH);
@@ -122,8 +122,8 @@ void loop() {
       digitalWrite(in4, HIGH);
 
       // Convert the increasing Y-axis readings for going forward from 550 to 1023 into 0 to 255 value for the PWM signal for increasing the motor speed
-      motorSpeedA = map(data.yAxis, 550, 1023, 0, 255);
-      motorSpeedB = map(data.yAxis, 550, 1023, 0, 255);
+      motorSpeedA = map(data.joyposY, 550, 1023, 0, 255);
+      motorSpeedB = map(data.joyposY, 550, 1023, 0, 255);
     }
     // Prevent buzzing at low speeds (Adjust according to your motors. My motors couldn't start moving if PWM value was below value of 70)
     if (motorSpeedA < 70) {
