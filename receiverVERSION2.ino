@@ -30,8 +30,8 @@ Package data;
 
 void setup() 
 {
-  Serial.begin(115200);
-  delay(1000);
+  Serial.begin(9600);
+  delay(20);
 
   myRadio.begin(); 
   myRadio.setChannel(115); 
