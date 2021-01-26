@@ -12,8 +12,11 @@ String xAxis, yAxis;
 void setup() {
   Serial.begin(9600);
   radio.begin();
+ // myRadio.setChannel(115);
   radio.openWritingPipe(address);
+  //myRadio.openWritingPipe( addresses[0]);
   radio.setPALevel(RF24_PA_MIN);
+ // myRadio.setDataRate( RF24_250KBPS );
   radio.stopListening();
 }
 void loop() {
