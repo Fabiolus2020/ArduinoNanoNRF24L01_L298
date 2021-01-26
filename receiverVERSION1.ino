@@ -57,10 +57,10 @@ void loop() {
     {
       myRadio.read( &data, sizeof(data) );
     }
-    Serial.print("X : ");
-    Serial.println(data.xAxis);
-    Serial.print("Y : ");
-    Serial.println(data.yAxis);
+   // Serial.print("X : ");
+   // Serial.println(data.xAxis);
+   // Serial.print("Y : ");
+  //  Serial.println(data.yAxis);
 
 
 
