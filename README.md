@@ -6,7 +6,7 @@ Wireless communication using NRF24L01+ and the L298HdualBridge to control 2 dc m
 
 The best results are if you use 9 volt or higher for the remote control. I have set a limit for lowest speed which is 70, the value can be changed to go lower.
 
-There re 3 version available, all uses same pins so you can have one conntroller using same sketch for version 1,2,3. Having 3 sketch I can alternate by simply changing the sketch on the tank and motor pins, the controller stay as is.
+There are 3 versions available, all uses same pins so you can have one conntroller using same sketch for version 1,2,3. I wnted different sketches 3 sketches to alternate by simply changing sketch on the tank and the controller stay as is.
 
 
 Version 1
