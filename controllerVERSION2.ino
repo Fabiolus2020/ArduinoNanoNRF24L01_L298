@@ -24,14 +24,12 @@ Package data;
 
 void setup()
 {
-  Serial.begin(115200);
-  delay(100);
+  Serial.begin(9600);
   myRadio.begin();  
   myRadio.setChannel(115); 
   myRadio.setPALevel(RF24_PA_MIN);
   myRadio.setDataRate( RF24_250KBPS ) ; 
   myRadio.openWritingPipe( addresses[0]);
-  delay(100);
 }
 
 void loop()
@@ -39,11 +37,11 @@ void loop()
  
   myRadio.write(&data, sizeof(data)); 
 
-  Serial.print("X:");
-  Serial.print(data.X);
-  Serial.print("    Y");
-  Serial.println(data.Y);
+//  Serial.print("X:");
+ // Serial.print(data.X);
+//  Serial.print("    Y");
+ // Serial.println(data.Y);
   data.X = analogRead(A0);
   data.Y = analogRead(A1);
-  delay(100);
+  delay(20);
 }
