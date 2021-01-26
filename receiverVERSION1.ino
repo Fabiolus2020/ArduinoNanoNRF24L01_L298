@@ -34,12 +34,6 @@ int motorSpeedA = 0;
 int motorSpeedB = 0;
 
 void setup() {
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
   Serial.begin(9600);
   myRadio.begin();
   myRadio.setChannel(115);
@@ -47,6 +41,13 @@ void setup() {
   myRadio.setDataRate( RF24_250KBPS ) ;
   myRadio.openReadingPipe(1, addresses[0]);
   myRadio.startListening();
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+
 }
 
 
