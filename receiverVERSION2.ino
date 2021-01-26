@@ -16,11 +16,14 @@ struct package
 };
 
 byte addresses[][6] = {"0"}; 
-int OUT1 = 5;
-int OUT2 = 6;
+//int OUT1 = 5;
+//int OUT2 = 6;
+//int OUT3 = 3;
+//int OUT4 = 10;
+int OUT1 = 4;
+int OUT2 = 5;
 int OUT3 = 3;
-int OUT4 = 10;
-
+int OUT4 = 7;
 
 typedef struct package Package;
 Package data;
