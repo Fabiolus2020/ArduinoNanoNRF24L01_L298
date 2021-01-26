@@ -15,7 +15,11 @@ struct package
   int Y=512;
 };
 
-byte addresses[][6] = {"0"}; 
+//address through which two modules communicate.
+const byte address[6] = "00001";
+
+//byte addresses[][6] = {"0"};
+
 //int OUT1 = 5;
 //int OUT2 = 6;
 //int OUT3 = 3;
