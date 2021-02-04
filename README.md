@@ -23,5 +23,5 @@ https://youtu.be/1r-FbrC-4KA
 2 x NRF24L01+
 2 x motor 
 
-version 1 & 3 use PWM pins on ENA and ENB and verion 2 use jumpers on ENA and ENB
+version 1 & 2 does not use PWM pins on ENA and ENB and will require jumpers on ENA and ENB
 
