@@ -1,114 +1,108 @@
+//Fabiolus
+//the_fabiolous@hotmail.com
+//Oct_10_2020
 //Include Libraries
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
 
 RF24 myRadio(8, 9); // CE, CSN
-struct package
-{
-  int motorspeed1;
-  int motorspeed2;
-  int motordirection;
-};
 
 //address through which two modules communicate.
 const byte address[6] = "00001";
 
 //byte addresses[][6] = {"0"};
 
-// Motor A Connections
-int enA = 10;
-int in1 = 4;
-int in2 = 5;
-
-// Motor B Connections
-int enB = 3;
-int in3 = 6;
-int in4 = 7;
+struct package
+{
+  int motordirection;
+};
 
 typedef struct package Package;
 Package data;
+// Define Joystick Connections
+#define joyX A0
+#define joyY A1
+
+// Define Joystick Values - Start at 512 (middle position)
+int joyposX = 512;
+int joyposY = 512;
+int motordirection = 0;
 
 void setup()
 {
-  while (!Serial);
+
   Serial.begin(9600);
+  delay(100);
   myRadio.begin();
   myRadio.setChannel(115);
-  myRadio.setPALevel(RF24_PA_MAX);
-  myRadio.setDataRate( RF24_250KBPS ) ;
-  //myRadio.openReadingPipe(1, addresses[0]);
+  myRadio.setPALevel(RF24_PA_MIN);
+  myRadio.setDataRate( RF24_250KBPS );
 
+  //myRadio.openWritingPipe( addresses[0]);
   //set the address
-  myRadio.openReadingPipe(0, address);
-  myRadio.startListening();
-  // Set all the motor control pins to outputs
-  pinMode(enA, OUTPUT);
-  pinMode(enB, OUTPUT);
-  pinMode(in1, OUTPUT);
-  pinMode(in2, OUTPUT);
-  pinMode(in3, OUTPUT);
-  pinMode(in4, OUTPUT);
+  myRadio.openWritingPipe(address);
 
+  //Set module as transmitter
+  myRadio.stopListening();
+  delay(100);
 }
 
-  void loop()
+void loop()
+{
+
+  myRadio.write(&data, sizeof(data));
+  // Print to Serial Monitor
+  // Serial.println("Reading motorcontrol values ");
+
+  // Read the Joystick X and Y positions
+  joyposX = analogRead(joyX);
+  joyposY = analogRead(joyY);
+
+  // Determine if this is a forward or backward motion
+  // Do this by reading the Verticle Value
+  // Apply results to MotorSpeed and to Direction
+
+  if (joyposX < 460)
   {
-    if ( myRadio.available())
-    {
-      //while (myRadio.available())
-      //{
-        myRadio.read( &data, sizeof(data) );
-      //}
-
-      //Serial Print the values
-     // Serial.print(": motorspeed1 :");
-    //  Serial.println(data.motorspeed1);
-    //  Serial.print(" motorspeed2 :");
-    //  Serial.println(data.motorspeed2);
-    //  Serial.print(" direction");
-     // Serial.println(data.motordirection);
-      //delay (2000);
-      // Set Motor Direction
-      if (data.motordirection == 1)
-      {
-        // Motors are backwards
-        digitalWrite(in1, LOW);
-        digitalWrite(in2, HIGH);
-        digitalWrite(in3, LOW);
-        digitalWrite(in4, HIGH);
-      }
-
-      if (data.motordirection == 0)
-      {
-        // Motors are forwards
-        digitalWrite(in1, HIGH);
-        digitalWrite(in2, LOW);
-        digitalWrite(in3, HIGH);
-        digitalWrite(in4, LOW);
-      }
-
-      if (data.motordirection == 3)
-      {
-        // Motors are forwards
-        digitalWrite(in1, HIGH);
-        digitalWrite(in2, LOW);
-        digitalWrite(in3, LOW);
-        digitalWrite(in4, HIGH);
-      }
-
-      if (data.motordirection == 4)
-      {
-        // Motors are forwards
-        digitalWrite(in1, LOW);
-        digitalWrite(in2, HIGH);
-        digitalWrite(in3, HIGH);
-        digitalWrite(in4, LOW);
-      }
-      // Drive Motors
-      analogWrite(enA, data.motorspeed1);
-      analogWrite(enB, data.motorspeed2);
-
-    }
-    delay(30);
+    // This is Forward
+    // Set Motors forward
+    data.motordirection = 1;
   }
+  else if (joyposX > 600)
+  {
+    // This is backward
+    // Set Motors backward
+    data.motordirection = 2;
+  }
+
+  else if (joyposY > 600)
+  {
+
+    // This is left
+    // Set Motors backward and forward
+    data.motordirection = 3;
+  }
+  else if (joyposY < 460)
+  {
+    data.motordirection = 4;
+  }
+
+  else {
+    data.motordirection = 0;
+  }
+
+  //Display the Motor Control values in the serial monitor.
+  // Serial.print("motorspeed1: ");
+  // Serial.println(data.motorspeed1);
+  //  Serial.print(" motorspeed2: ");
+  // Serial.println(data.motorspeed2);
+  //Serial.print(" - Direction: ");
+  //Serial.println(data.motordirection);
+  // Serial.print(" Xjoystick: ");
+  // Serial.println(joyposX);
+  // Serial.print(" Yjoystick: ");
+  //Serial.println(joyposY);
+
+  delay(100);  // Wait a bit before next transmission
+}
