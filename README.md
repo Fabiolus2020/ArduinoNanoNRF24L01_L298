@@ -6,15 +6,13 @@ Wireless communication using NRF24L01+ and the L298HdualBridge to control 2 dc m
 
 The best results are if you use 9 volt or higher for the remote control. I have set a limit for lowest speed which is 70, the value can be changed to go lower.
 
-There are 3 versions available, all uses same pins so you can have one conntroller using same sketch for version 1,2,3. I wnted different sketches 3 sketches to alternate by simply changing sketch on the tank and the controller stay as is.
+This version use analogWrite to controlwith PWM.
 
 
 Version 1
 Youtube:
 https://youtu.be/bihK9J9_0as
 
-Version 2
-Youtube:
 https://youtu.be/1r-FbrC-4KA
 
 
@@ -23,5 +21,5 @@ https://youtu.be/1r-FbrC-4KA
 2 x NRF24L01+
 2 x motor 
 
-version 3 does not use PWM pins on ENA and ENB and will require jumpers on ENA and ENB. Version 1 is way better than v ersion 2 for PWM fun!
+
 
